@@ -19,7 +19,7 @@ Each child node can have the following properties:
 
 | Property          | Type          | Description                                                            |
 | ----------------- | ------------- | ---------------------------------------------------------------------- |
-| `display-name`    | string        | Name for the layer on displays                                         |
+| `label`           | string        | Unique label for the node                                              |
 | `bindings`        | phandle-array | List of [key behaviors](../features/keymaps.md#behaviors), one per key |
 | `sensor-bindings` | phandle-array | List of sensor behaviors, one per sensor                               |
 

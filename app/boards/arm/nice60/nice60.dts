@@ -42,6 +42,7 @@ RC(4,0)   RC(4,1)   RC(4,2)                      RC(4,5)                       R
 
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
+        label = "KSCAN";
 
         diode-direction = "col2row";
         row-gpios
@@ -73,17 +74,19 @@ RC(4,0)   RC(4,1)   RC(4,2)                      RC(4,5)                       R
         compatible = "gpio-leds";
         blue_led: led_0 {
             gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
+            label = "Blue LED";
         };
     };
 
-    // Node name must match original "EXT_POWER" label to preserve user settings.
-    EXT_POWER {
+    ext-power {
         compatible = "zmk,ext-power-generic";
+        label = "EXT_POWER";
         control-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
     };
 
     vbatt: vbatt {
         compatible = "zmk,battery-voltage-divider";
+        label = "BATTERY";
         io-channels = <&adc 2>;
         output-ohms = <2000000>;
         full-ohms = <(2000000 + 806000)>;
@@ -115,6 +118,7 @@ RC(4,0)   RC(4,1)   RC(4,2)                      RC(4,5)                       R
 
     led_strip: ws2812@0 {
         compatible = "worldsemi,ws2812-spi";
+        label = "WS2812";
 
         /* SPI */
         reg = <0>; /* ignored, but necessary for SPI bindings */
@@ -132,6 +136,7 @@ RC(4,0)   RC(4,1)   RC(4,2)                      RC(4,5)                       R
     status = "okay";
     cdc_acm_uart: cdc_acm_uart {
         compatible = "zephyr,cdc-acm-uart";
+        label = "CDC_ACM_0";
     };
 };
 
@@ -146,10 +151,12 @@ RC(4,0)   RC(4,1)   RC(4,2)                      RC(4,5)                       R
         #size-cells = <1>;
 
         sd_partition: partition@0 {
+            label = "mbr";
             reg = <0x00000000 0x00001000>;
         };
 
         code_partition: partition@1000 {
+            label = "code_partition";
             reg = <0x00001000 0x000d3000>;
         };
 
@@ -163,10 +170,12 @@ RC(4,0)   RC(4,1)   RC(4,2)                      RC(4,5)                       R
          * if enabled.
          */
         storage_partition: partition@d4000 {
+            label = "storage";
             reg = <0x000d4000 0x00020000>;
         };
 
         boot_partition: partition@f4000 {
+            label = "adafruit_boot";
             reg = <0x000f4000 0x0000c000>;
         };
     };

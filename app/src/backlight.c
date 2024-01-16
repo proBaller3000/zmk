@@ -42,7 +42,7 @@ struct backlight_state {
 static struct backlight_state state = {.brightness = CONFIG_ZMK_BACKLIGHT_BRT_START,
                                        .on = IS_ENABLED(CONFIG_ZMK_BACKLIGHT_ON_START)};
 
-static int zmk_backlight_update(void) {
+static int zmk_backlight_update() {
     uint8_t brt = zmk_backlight_get_brt();
     LOG_DBG("Update backlight brightness: %d%%", brt);
 
@@ -98,7 +98,7 @@ static int zmk_backlight_init(const struct device *_arg) {
     return zmk_backlight_update();
 }
 
-static int zmk_backlight_update_and_save(void) {
+static int zmk_backlight_update_and_save() {
     int rc = zmk_backlight_update();
     if (rc != 0) {
         return rc;
@@ -112,20 +112,20 @@ static int zmk_backlight_update_and_save(void) {
 #endif
 }
 
-int zmk_backlight_on(void) {
+int zmk_backlight_on() {
     state.brightness = MAX(state.brightness, CONFIG_ZMK_BACKLIGHT_BRT_STEP);
     state.on = true;
     return zmk_backlight_update_and_save();
 }
 
-int zmk_backlight_off(void) {
+int zmk_backlight_off() {
     state.on = false;
     return zmk_backlight_update_and_save();
 }
 
-int zmk_backlight_toggle(void) { return state.on ? zmk_backlight_off() : zmk_backlight_on(); }
+int zmk_backlight_toggle() { return state.on ? zmk_backlight_off() : zmk_backlight_on(); }
 
-bool zmk_backlight_is_on(void) { return state.on; }
+bool zmk_backlight_is_on() { return state.on; }
 
 int zmk_backlight_set_brt(uint8_t brightness) {
     state.brightness = MIN(brightness, BRT_MAX);
@@ -133,14 +133,14 @@ int zmk_backlight_set_brt(uint8_t brightness) {
     return zmk_backlight_update_and_save();
 }
 
-uint8_t zmk_backlight_get_brt(void) { return state.on ? state.brightness : 0; }
+uint8_t zmk_backlight_get_brt() { return state.on ? state.brightness : 0; }
 
 uint8_t zmk_backlight_calc_brt(int direction) {
     int brt = state.brightness + (direction * CONFIG_ZMK_BACKLIGHT_BRT_STEP);
     return CLAMP(brt, 0, BRT_MAX);
 }
 
-uint8_t zmk_backlight_calc_brt_cycle(void) {
+uint8_t zmk_backlight_calc_brt_cycle() {
     if (state.brightness == BRT_MAX) {
         return 0;
     } else {

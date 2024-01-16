@@ -6,6 +6,7 @@
     behaviors {
         mod_morph: mod_morph {
             compatible = "zmk,behavior-mod-morph";
+            label = "MOD_MORPH_TEST";
             #binding-cells = <0>;
             bindings = <&kp A>, <&kp LS(B)>;  // implict mod overwrite
             mods = <(MOD_LSFT|MOD_RSFT)>;
@@ -14,6 +15,7 @@
 
     keymap {
         compatible = "zmk,keymap";
+        label ="Default keymap";
 
         default_layer {
             bindings = <

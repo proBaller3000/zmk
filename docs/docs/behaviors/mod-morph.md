@@ -23,6 +23,7 @@ An example of how to implement the mod-morph "Grave Escape":
     behaviors {
         gresc: grave_escape {
             compatible = "zmk,behavior-mod-morph";
+            label = "GRAVE_ESCAPE";
             #binding-cells = <0>;
             bindings = <&kp ESC>, <&kp GRAVE>;
             mods = <(MOD_LGUI|MOD_LSFT|MOD_RGUI|MOD_RSFT)>;
@@ -78,6 +79,7 @@ For example, the following configuration morphs `LEFT_SHIFT` + `BACKSPACE` into 
     behaviors {
         bspc_del: backspace_delete {
             compatible = "zmk,behavior-mod-morph";
+            label = "BACKSPACE_DELETE";
             #binding-cells = <0>;
             bindings = <&kp BACKSPACE>, <&kp DELETE>;
             mods = <(MOD_LSFT|MOD_RSFT)>;

@@ -67,7 +67,7 @@ static struct led_rgb pixels[STRIP_NUM_PIXELS];
 static struct rgb_underglow_state state;
 
 #if IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_EXT_POWER)
-static const struct device *const ext_power = DEVICE_DT_GET(DT_INST(0, zmk_ext_power_generic));
+static const struct device *ext_power;
 #endif
 
 static struct zmk_led_hsb hsb_scale_min_max(struct zmk_led_hsb hsb) {
@@ -130,13 +130,13 @@ static struct led_rgb hsb_to_rgb(struct zmk_led_hsb hsb) {
     return rgb;
 }
 
-static void zmk_rgb_underglow_effect_solid(void) {
+static void zmk_rgb_underglow_effect_solid() {
     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
         pixels[i] = hsb_to_rgb(hsb_scale_min_max(state.color));
     }
 }
 
-static void zmk_rgb_underglow_effect_breathe(void) {
+static void zmk_rgb_underglow_effect_breathe() {
     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
         struct zmk_led_hsb hsb = state.color;
         hsb.b = abs(state.animation_step - 1200) / 12;
@@ -151,7 +151,7 @@ static void zmk_rgb_underglow_effect_breathe(void) {
     }
 }
 
-static void zmk_rgb_underglow_effect_spectrum(void) {
+static void zmk_rgb_underglow_effect_spectrum() {
     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
         struct zmk_led_hsb hsb = state.color;
         hsb.h = state.animation_step;
@@ -163,7 +163,7 @@ static void zmk_rgb_underglow_effect_spectrum(void) {
     state.animation_step = state.animation_step % HUE_MAX;
 }
 
-static void zmk_rgb_underglow_effect_swirl(void) {
+static void zmk_rgb_underglow_effect_swirl() {
     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
         struct zmk_led_hsb hsb = state.color;
         hsb.h = (HUE_MAX / STRIP_NUM_PIXELS * i + state.animation_step) % HUE_MAX;
@@ -232,7 +232,7 @@ static int rgb_settings_set(const char *name, size_t len, settings_read_cb read_
 
 struct settings_handler rgb_conf = {.name = "rgb/underglow", .h_set = rgb_settings_set};
 
-static void zmk_rgb_underglow_save_state_work(struct k_work *_work) {
+static void zmk_rgb_underglow_save_state_work() {
     settings_save_one("rgb/underglow/state", &state, sizeof(state));
 }
 
@@ -243,9 +243,9 @@ static int zmk_rgb_underglow_init(const struct device *_arg) {
     led_strip = DEVICE_DT_GET(STRIP_CHOSEN);
 
 #if IS_ENABLED(CONFIG_ZMK_RGB_UNDERGLOW_EXT_POWER)
-    if (!device_is_ready(ext_power)) {
-        LOG_ERR("External power device \"%s\" is not ready", ext_power->name);
-        return -ENODEV;
+    ext_power = device_get_binding("EXT_POWER");
+    if (ext_power == NULL) {
+        LOG_ERR("Unable to retrieve ext_power device: EXT_POWER");
     }
 #endif
 
@@ -286,7 +286,7 @@ static int zmk_rgb_underglow_init(const struct device *_arg) {
     return 0;
 }
 
-int zmk_rgb_underglow_save_state(void) {
+int zmk_rgb_underglow_save_state() {
 #if IS_ENABLED(CONFIG_SETTINGS)
     int ret = k_work_reschedule(&underglow_save_work, K_MSEC(CONFIG_ZMK_SETTINGS_SAVE_DEBOUNCE));
     return MIN(ret, 0);
@@ -303,7 +303,7 @@ int zmk_rgb_underglow_get_state(bool *on_off) {
     return 0;
 }
 
-int zmk_rgb_underglow_on(void) {
+int zmk_rgb_underglow_on() {
     if (!led_strip)
         return -ENODEV;
 
@@ -333,7 +333,7 @@ static void zmk_rgb_underglow_off_handler(struct k_work *work) {
 
 K_WORK_DEFINE(underglow_off_work, zmk_rgb_underglow_off_handler);
 
-int zmk_rgb_underglow_off(void) {
+int zmk_rgb_underglow_off() {
     if (!led_strip)
         return -ENODEV;
 
@@ -376,7 +376,7 @@ int zmk_rgb_underglow_cycle_effect(int direction) {
     return zmk_rgb_underglow_select_effect(zmk_rgb_underglow_calc_effect(direction));
 }
 
-int zmk_rgb_underglow_toggle(void) {
+int zmk_rgb_underglow_toggle() {
     return state.on ? zmk_rgb_underglow_off() : zmk_rgb_underglow_on();
 }
 

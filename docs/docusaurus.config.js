@@ -146,7 +146,6 @@ module.exports = {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl: "https://github.com/zmkfirmware/zmk/edit/main/docs/",
-          blogSidebarCount: "ALL",
         },
         theme: {
           customCss: [

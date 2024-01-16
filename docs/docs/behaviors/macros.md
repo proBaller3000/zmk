@@ -18,6 +18,7 @@ A macro definition looks like:
 / {
     macros {
         zed_em_kay: zed_em_kay {
+            label = "ZM_zed_em_kay";
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings
@@ -238,6 +239,7 @@ To achieve this, a combination of a 0ms wait time and splitting the press and re
  *  `&lm NUM_LAYER LSHIFT`
  */
 lm: lm {
+    label = "LAYER_MOD";
     compatible = "zmk,behavior-macro-two-param";
     wait-ms = <0>;
     tap-ms = <0>;
@@ -321,6 +323,7 @@ This can be used instead of a complete macro definition. During the firmware bui
 ```dts
     my_zero_param_macro: my_zero_param_macro {
         compatible = "zmk,behavior-macro";
+        label = "ZM_my_macro";
         #binding-cells = <0>;
         wait-ms = <30>;
         tap-ms = <40>;

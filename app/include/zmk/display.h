@@ -10,10 +10,10 @@
 
 #pragma once
 
-struct k_work_q *zmk_display_work_q(void);
+struct k_work_q *zmk_display_work_q();
 
-bool zmk_display_is_initialized(void);
-int zmk_display_init(void);
+bool zmk_display_is_initialized();
+int zmk_display_init();
 
 /**
  * @brief Macro to define a ZMK event listener that handles the thread safety of fetching
